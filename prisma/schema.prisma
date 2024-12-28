@@ -11,25 +11,43 @@ datasource db {
 
 // Resume model
 model Resume {
-  id           String   @id @default(cuid())
-  userId       String
-  colorHex     String   @default("#000000")
-  borderRadius String   @default("squircle")
-  title        String?
-  description  String?
-  photoUrl     String?
-  summary      String?
-  firstName    String?
-  lastName     String?
-  email        String?
-  phone        String?
-  address      String?
-  city         String?
-  state        String?
-  country      String?
-  jobTitle     String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id             String           @id @default(cuid())
+  userId         String
+  colorHex       String           @default("#000000")
+  borderRadius   String           @default("squircle")
+  title          String?
+  description    String?
+  photoUrl       String?
+  summary        String?
+  firstName      String?
+  lastName       String?
+  email          String?
+  phone          String?
+  address        String?
+  city           String?
+  state          String?
+  country        String?
+  jobTitle       String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  WorkExperience WorkExperience[]
 
   @@map("resumes")
+}
+
+// Work experience model
+model WorkExperience {
+  id          String    @id @default(cuid())
+  position    String?
+  company     String?
+  location    String?
+  startDate   DateTime?
+  endDate     DateTime?
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  resumeId    String
+  resume      Resume    @relation(fields: [resumeId], references: [id])
+
+  @@map("work_experiences")
 }
