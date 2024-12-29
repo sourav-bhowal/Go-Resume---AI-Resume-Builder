@@ -17,7 +17,7 @@ import {
 } from "@/helpers/validation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { GripHorizontal } from "lucide-react";
+import { GripHorizontal, Plus, Trash } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 
 // Work Experience Form Component
@@ -94,7 +94,8 @@ export default function WorkExperienceForm({
                 })
               }
             >
-              Add Work Experience
+              <Plus className="mr-1 size-4" />
+              Add
             </Button>
           </div>
         </form>
@@ -219,6 +220,7 @@ function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
         onClick={() => remove(index)}
         className="text-sm"
       >
+        <Trash className="mr-1 size-4" />
         Remove
       </Button>
     </div>
