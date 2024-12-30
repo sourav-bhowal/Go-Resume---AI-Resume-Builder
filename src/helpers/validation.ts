@@ -57,11 +57,48 @@ export const workExperienceSchema = z.object({
 // Define the type for the work experience object
 export type WorkExperienceValues = z.infer<typeof workExperienceSchema>;
 
+// Define the schema for the education object which is an array of objects
+export const educationSchema = z.object({
+  educations: z
+    .array(
+      z.object({
+        school: optionalString,
+        degree: optionalString,
+        startDate: optionalString,
+        endDate: optionalString,
+        description: optionalString,
+      }),
+    )
+    .optional(),
+});
+
+// Define the type for the education object
+export type EducationValues = z.infer<typeof educationSchema>;
+
+// Define the schema for the skills object which is an array of strings
+export const skillsSchema = z.object({
+  skills: z.array(z.string().trim()).optional(),
+});
+
+// Define the type for the skills object
+export type SkillsValues = z.infer<typeof skillsSchema>;
+
+// Define the schema for the summary object
+export const summarySchema = z.object({
+  summary: optionalString,
+});
+
+// Define the type for the summary object
+export type SummaryValues = z.infer<typeof summarySchema>;
+
 // Define the schema for the resume object which is a combination of the above schemas
 export const resumeSchema = z.object({
   ...generateInfoSchema.shape,
   ...personalInfoSchema.shape,
   ...workExperienceSchema.shape,
+  ...educationSchema.shape,
+  ...skillsSchema.shape,
+  ...summarySchema.shape,
 });
 
 // Define the type for the resume object

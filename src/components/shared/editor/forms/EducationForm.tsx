@@ -11,25 +11,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  workExperienceSchema,
-  WorkExperienceValues,
-} from "@/helpers/validation";
+import { educationSchema, EducationValues } from "@/helpers/validation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { GripHorizontal, Plus, Trash } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 
-// Work Experience Form Component
-export default function WorkExperienceForm({
+//
+export default function EducationForm({
   resumeData,
   setResumeData,
 }: ResumeEditorFormProps) {
   // Form for work experineces which takes the resumeData as default values
-  const form = useForm<WorkExperienceValues>({
-    resolver: zodResolver(workExperienceSchema),
+  const form = useForm<EducationValues>({
+    resolver: zodResolver(educationSchema),
     defaultValues: {
-      workExperiences: resumeData.workExperiences || [],
+      educations: resumeData.educations || [],
     },
   });
 
@@ -44,10 +40,9 @@ export default function WorkExperienceForm({
       // Update the resume data with the new values
       setResumeData({
         ...resumeData,
-        workExperiences:
-          values.workExperiences?.filter(
-            (experience) => experience !== undefined,
-          ) || [],
+        educations:
+          values.educations?.filter((education) => education !== undefined) ||
+          [],
       });
     });
 
@@ -58,22 +53,22 @@ export default function WorkExperienceForm({
   // Get the field array for work experiences from the form to add new work experiences dynamically
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "workExperiences",
+    name: "educations",
   });
 
-  // Return the form component
+  // Render the form
   return (
     <div className="mx-auto max-w-xl space-y-6">
       <div className="space-y-1.5 text-center">
-        <h2 className="text-2xl font-bold">Work Experiences</h2>
+        <h2 className="text-2xl font-bold">Education</h2>
         <p className="text-sm text-muted-foreground">
-          Add your work experiences here to complete your profile
+          Add your educations here to complete your profile
         </p>
       </div>
       <Form {...form}>
         <form className="mt-3 space-y-3">
           {fields.map((field, index) => (
-            <WorkExperienceItem
+            <EducationItem
               key={field.id}
               form={form}
               index={index}
@@ -85,9 +80,8 @@ export default function WorkExperienceForm({
               type="button"
               onClick={() =>
                 append({
-                  position: "",
-                  company: "",
-                  location: "",
+                  degree: "",
+                  school: "",
                   startDate: "",
                   endDate: "",
                   description: "",
@@ -105,28 +99,28 @@ export default function WorkExperienceForm({
 }
 
 // Interface for the WorkExperienceItem component
-interface WorkExperienceItemProps {
-  form: UseFormReturn<WorkExperienceValues>;
+interface EducationItemProps {
+  form: UseFormReturn<EducationValues>;
   index: number;
   remove: (index: number) => void;
 }
 
 // WorkExperienceItem component
-function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
+function EducationItem({ form, index, remove }: EducationItemProps) {
   return (
     <div className="space-y-3 rounded-md border-2 bg-background p-3">
       <div className="flex justify-between gap-2">
-        <span className="font-semibold">Work Experience {index + 1}</span>
+        <span className="font-semibold">Education {index + 1}</span>
         <GripHorizontal className="size-5 cursor-grab text-muted-foreground" />
       </div>
       <FormField
         control={form.control}
-        name={`workExperiences.${index}.position`}
+        name={`educations.${index}.degree`}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Job Position</FormLabel>
+            <FormLabel>Degree</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Software Engineer" autoFocus />
+              <Input {...field} placeholder="Btech CSE" autoFocus />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -134,34 +128,22 @@ function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
       />
       <FormField
         control={form.control}
-        name={`workExperiences.${index}.company`}
+        name={`educations.${index}.school`}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Company</FormLabel>
+            <FormLabel>Institution</FormLabel>
             <FormControl>
-              <Input {...field} placeholder="Google" />
+              <Input {...field} placeholder="MIT" />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-      <FormField
-        control={form.control}
-        name={`workExperiences.${index}.location`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Location</FormLabel>
-            <FormControl>
-              <Input {...field} placeholder="Mountain View, CA" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+
       <div className="grid grid-cols-2 gap-3">
         <FormField
           control={form.control}
-          name={`workExperiences.${index}.startDate`}
+          name={`educations.${index}.startDate`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Start Date</FormLabel>
@@ -178,7 +160,7 @@ function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
         />
         <FormField
           control={form.control}
-          name={`workExperiences.${index}.endDate`}
+          name={`educations.${index}.endDate`}
           render={({ field }) => (
             <FormItem>
               <FormLabel>End Date</FormLabel>
@@ -197,22 +179,6 @@ function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
       <FormDescription>
         Ignore the end date if you are currently working here
       </FormDescription>
-      <FormField
-        control={form.control}
-        name={`workExperiences.${index}.description`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Description</FormLabel>
-            <FormControl>
-              <Textarea
-                {...field}
-                placeholder="Describe your role and responsibilities"
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
       {/* Remove the work exp button */}
       <Button
         type="button"
