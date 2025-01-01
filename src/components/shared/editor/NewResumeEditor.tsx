@@ -6,6 +6,7 @@ import { steps } from "./steps";
 import BreadCrumbs from "./BreadCrumbs";
 import { useState } from "react";
 import { ResumeValues } from "@/helpers/validation";
+import ResumePreviewSection from "./ResumePreviewSection";
 
 // New Resume Editor Component
 export default function NewResumeEditor() {
@@ -35,7 +36,7 @@ export default function NewResumeEditor() {
 
   return (
     <div className="flex grow flex-col">
-      <header className="space-y-1.5 border-b px-3 py-5 text-center">
+      <header className="space-y-1.5 border-b px-3 py-2 text-center">
         <h1 className="text-2xl font-bold">Create a new resume</h1>
         <p className="text-sm text-muted-foreground">
           Start with a blank canvas and follow the steps to create your resume.
@@ -44,6 +45,7 @@ export default function NewResumeEditor() {
       {/* EDITOR */}
       <main className="relative grow">
         <div className="absolute bottom-0 top-0 flex w-full">
+          {/* LEFT PANEL */}
           <div className="w-full space-y-5 overflow-y-auto p-3 md:w-1/2">
             <BreadCrumbs currentStep={currentStep} setCurrentStep={setStep} />
             {CurrentFormComponent && (
@@ -54,8 +56,12 @@ export default function NewResumeEditor() {
             )}
           </div>
           <div className="grow md:border-r" />
+          {/* RIGHT PANEL */}
           <div className="hidden w-1/2 md:flex">
-            <pre>{JSON.stringify(resumeData, null, 2)}</pre>
+            <ResumePreviewSection
+              resumeData={resumeData}
+              setResumeData={setResumeData}
+            />
           </div>
         </div>
       </main>
