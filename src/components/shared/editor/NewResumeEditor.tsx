@@ -3,10 +3,10 @@ import Link from "next/link";
 import { Button } from "../../ui/button";
 import { useSearchParams } from "next/navigation";
 import { steps } from "./steps";
-import BreadCrumbs from "./BreadCrumbs";
+import BreadCrumbs from "../editor/parts/BreadCrumbs";
 import { useState } from "react";
 import { ResumeValues } from "@/helpers/validation";
-import ResumePreviewSection from "./ResumePreviewSection";
+import ResumePreviewSection from "./parts/ResumePreviewSection";
 
 // New Resume Editor Component
 export default function NewResumeEditor() {
@@ -57,12 +57,10 @@ export default function NewResumeEditor() {
           </div>
           <div className="grow md:border-r" />
           {/* RIGHT PANEL */}
-          <div className="hidden w-1/2 md:flex">
-            <ResumePreviewSection
-              resumeData={resumeData}
-              setResumeData={setResumeData}
-            />
-          </div>
+          <ResumePreviewSection
+            resumeData={resumeData}
+            setResumeData={setResumeData}
+          />
         </div>
       </main>
       {/* FOOTER */}
