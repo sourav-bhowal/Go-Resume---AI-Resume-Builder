@@ -7,8 +7,10 @@ import BreadCrumbs from "../editor/parts/BreadCrumbs";
 import { useState } from "react";
 import { ResumeValues } from "@/helpers/validation";
 import ResumePreviewSection from "./parts/ResumePreviewSection";
-import { FileUserIcon, PenLineIcon } from "lucide-react";
+import { FileUserIcon, Loader2, PenLineIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import useUnloadWarning from "@/hooks/use-unloadWarning";
+import useAutoSave from "./autoSave";
 
 // New Resume Editor Component
 export default function NewResumeEditor() {
@@ -18,11 +20,17 @@ export default function NewResumeEditor() {
   // State for Resume Data
   const [resumeData, setResumeData] = useState<ResumeValues>({});
 
-  // Get current step
-  const currentStep = searchParams.get("step") || steps[0].key;
-
   // State to show resume preview in small screens
   const [showSmResumePreview, setShowSmResumePreview] = useState(false);
+
+  // Hook to show a warning when the user tries to leave the page with unsaved changes
+  const { isSaving, hasUnsavedChanges } = useAutoSave(resumeData);
+
+  // Show a warning when the user tries to leave the page with unsaved changes
+  useUnloadWarning(hasUnsavedChanges);
+
+  // Get current step
+  const currentStep = searchParams.get("step") || steps[0].key;
 
   // Set the current step in the URL along with the search params
   function setStep(key: string) {
@@ -39,6 +47,7 @@ export default function NewResumeEditor() {
     (step) => step.key === currentStep,
   )?.component;
 
+  // Return the component
   return (
     <div className="flex grow flex-col">
       <header className="space-y-1.5 border-b px-3 py-2 text-center">
@@ -130,7 +139,18 @@ export default function NewResumeEditor() {
             <Button variant={"secondary"} asChild>
               <Link href="/my-resumes">Close</Link>
             </Button>
-            <p className="text-muted-foreground opacity-0">Saving...</p>
+            <div className="text-muted-foreground">
+              {isSaving ? ( // Show saving status if saving
+                <p className="flex items-center gap-2">
+                  <Loader2 className="animate-spin" size={20} />
+                  Saving...
+                </p>
+              ) : hasUnsavedChanges ? ( // Show unsaved changes if there are unsaved changes
+                "Unsaved changes"
+              ) : (
+                ""
+              )}
+            </div>
           </div>
         </div>
       </footer>

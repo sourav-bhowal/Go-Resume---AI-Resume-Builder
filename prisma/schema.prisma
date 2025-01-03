@@ -11,28 +11,28 @@ datasource db {
 
 // Resume model
 model Resume {
-  id             String           @id @default(cuid())
-  userId         String
-  colorHex       String           @default("#000000")
-  borderRadius   String           @default("squircle")
-  title          String?
-  description    String?
-  photoUrl       String?
-  summary        String?
-  firstName      String?
-  lastName       String?
-  email          String?
-  phone          String?
-  address        String?
-  city           String?
-  state          String?
-  country        String?
-  jobTitle       String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  workExperience WorkExperience[]
-  education      Education[]
-  skills         String[]
+  id              String           @id @default(cuid())
+  userId          String
+  colorHex        String           @default("#000000")
+  borderRadius    String           @default("squircle")
+  title           String?
+  description     String?
+  photoUrl        String?
+  summary         String?
+  firstName       String?
+  lastName        String?
+  email           String?
+  phone           String?
+  address         String?
+  city            String?
+  state           String?
+  country         String?
+  jobTitle        String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  workExperiences WorkExperience[]
+  educations      Education[]
+  skills          String[]
 
   @@map("resumes")
 }
