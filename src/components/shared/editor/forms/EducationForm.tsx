@@ -15,6 +15,25 @@ import { educationSchema, EducationValues } from "@/helpers/validation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { GripHorizontal, Plus, Trash } from "lucide-react";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { CSS } from "@dnd-kit/utilities";
+import { cn } from "@/lib/utils";
 
 //
 export default function EducationForm({
@@ -51,10 +70,35 @@ export default function EducationForm({
   }, [form, resumeData, setResumeData]);
 
   // Get the field array for work experiences from the form to add new work experiences dynamically
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control: form.control,
     name: "educations",
   });
+
+  // Get the sensors for drag and drop functionality from the DnD Kit
+  const sensors = useSensors(
+    useSensor(PointerSensor), // Pointer sensor for mouse events (drag and drop)
+    useSensor(KeyboardSensor, {
+      // Keyboard sensor for keyboard events (drag and drop)
+      coordinateGetter: sortableKeyboardCoordinates, // Get the coordinates for keyboard events
+    }),
+  );
+
+  // Handle the drag and drop functionality for work experiences
+  function handleDragAndDrop(event: DragEndEvent) {
+    // Get the old and new index from the event
+    const { active, over } = event;
+    // Check if over is not null and active id is not equal to over id
+    if (over && active.id !== over?.id) {
+      // Get the old and new index from the active and over elements respectively in the fields array
+      const oldIndex = fields.findIndex((field) => field.id === active.id);
+      const newIndex = fields.findIndex((field) => field.id === over.id);
+      // Call the move function from the "usefieldarray hook" to move the work experience from old index to new index
+      move(oldIndex, newIndex);
+      // Return the new fields array with the moved work experience
+      return arrayMove(fields, oldIndex, newIndex);
+    }
+  }
 
   // Render the form
   return (
@@ -67,14 +111,29 @@ export default function EducationForm({
       </div>
       <Form {...form}>
         <form className="mt-3 space-y-3">
-          {fields.map((field, index) => (
-            <EducationItem
-              key={field.id}
-              form={form}
-              index={index}
-              remove={remove}
-            /> // Render the WorkExperienceItem component with the form, index, and remove function
-          ))}
+          {/* DnD Context for drag and drop functionality */}
+          <DndContext
+            sensors={sensors} // Add the sensors for drag and drop
+            onDragEnd={handleDragAndDrop} // Handle the drag and drop event
+            collisionDetection={closestCenter} // Detect the closest center for collision
+            modifiers={[restrictToVerticalAxis]} // Restrict the drag and drop to vertical axis only
+          >
+            {/* Sortable context for the work experiences */}
+            <SortableContext
+              items={fields}
+              strategy={verticalListSortingStrategy}
+            >
+              {fields.map((field, index) => (
+                <EducationItem
+                  id={field.id}
+                  key={field.id}
+                  form={form}
+                  index={index}
+                  remove={remove}
+                /> // Render the WorkExperienceItem component with the form, index, and remove function
+              ))}
+            </SortableContext>
+          </DndContext>
           <div className="flex justify-center">
             <Button
               type="button"
@@ -100,18 +159,43 @@ export default function EducationForm({
 
 // Interface for the WorkExperienceItem component
 interface EducationItemProps {
+  id: string;
   form: UseFormReturn<EducationValues>;
   index: number;
   remove: (index: number) => void;
 }
 
 // WorkExperienceItem component
-function EducationItem({ form, index, remove }: EducationItemProps) {
+function EducationItem({ form, index, remove, id }: EducationItemProps) {
+  // Destructure
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
   return (
-    <div className="space-y-3 rounded-md border-2 bg-background p-3">
+    <div
+      className={cn(
+        "space-y-3 rounded-md border-2 bg-background p-3",
+        isDragging && "relative z-50 cursor-grab shadow-xl",
+      )}
+      ref={setNodeRef} //
+      style={{
+        transform: CSS.Transform.toString(transform), //
+        transition, //
+      }}
+    >
       <div className="flex justify-between gap-2">
         <span className="font-semibold">Education {index + 1}</span>
-        <GripHorizontal className="size-5 cursor-grab text-muted-foreground" />
+        <GripHorizontal
+          className="size-5 cursor-grab text-muted-foreground outline-none"
+          {...attributes}
+          {...listeners}
+        />
       </div>
       <FormField
         control={form.control}

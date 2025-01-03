@@ -19,6 +19,25 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { GripHorizontal, Plus, Trash } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { CSS } from "@dnd-kit/utilities";
+import { cn } from "@/lib/utils";
 
 // Work Experience Form Component
 export default function WorkExperienceForm({
@@ -35,7 +54,7 @@ export default function WorkExperienceForm({
 
   // Handle form submission event using the "useEffect" hook for automatic form submission
   useEffect(() => {
-    // Watch the form values for changes
+    // Watch the form values for changes and update the resume data
     const { unsubscribe } = form.watch(async (values) => {
       // Trigger the form validation
       const isValidInput = await form.trigger();
@@ -56,10 +75,35 @@ export default function WorkExperienceForm({
   }, [form, resumeData, setResumeData]);
 
   // Get the field array for work experiences from the form to add new work experiences dynamically
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control: form.control,
     name: "workExperiences",
   });
+
+  // Get the sensors for drag and drop functionality from the DnD Kit
+  const sensors = useSensors(
+    useSensor(PointerSensor), // Pointer sensor for mouse events (drag and drop)
+    useSensor(KeyboardSensor, {
+      // Keyboard sensor for keyboard events (drag and drop)
+      coordinateGetter: sortableKeyboardCoordinates, // Get the coordinates for keyboard events
+    }),
+  );
+
+  // Handle the drag and drop functionality for work experiences
+  function handleDragAndDrop(event: DragEndEvent) {
+    // Get the old and new index from the event
+    const { active, over } = event;
+    // Check if over is not null and active id is not equal to over id
+    if (over && active.id !== over?.id) {
+      // Get the old and new index from the active and over elements respectively in the fields array
+      const oldIndex = fields.findIndex((field) => field.id === active.id);
+      const newIndex = fields.findIndex((field) => field.id === over.id);
+      // Call the move function from the "usefieldarray hook" to move the work experience from old index to new index
+      move(oldIndex, newIndex);
+      // Return the new fields array with the moved work experience
+      return arrayMove(fields, oldIndex, newIndex);
+    }
+  }
 
   // Return the form component
   return (
@@ -72,14 +116,30 @@ export default function WorkExperienceForm({
       </div>
       <Form {...form}>
         <form className="mt-3 space-y-3">
-          {fields.map((field, index) => (
-            <WorkExperienceItem
-              key={field.id}
-              form={form}
-              index={index}
-              remove={remove}
-            /> // Render the WorkExperienceItem component with the form, index, and remove function
-          ))}
+          {/* DnD Context for drag and drop functionality */}
+          <DndContext
+            sensors={sensors} // Add the sensors for drag and drop
+            onDragEnd={handleDragAndDrop} // Handle the drag and drop event
+            collisionDetection={closestCenter} // Detect the closest center for collision
+            modifiers={[restrictToVerticalAxis]} // Restrict the drag and drop to vertical axis only
+          >
+            {/* Sortable context for the work experiences */}
+            <SortableContext
+              items={fields}
+              strategy={verticalListSortingStrategy}
+            >
+              {fields.map((field, index) => (
+                <WorkExperienceItem
+                  id={field.id}
+                  key={field.id}
+                  form={form}
+                  index={index}
+                  remove={remove}
+                /> // Render the WorkExperienceItem component with the form, index, and remove function
+              ))}
+            </SortableContext>
+          </DndContext>
+          {/* Add new work experience button */}
           <div className="flex justify-center">
             <Button
               type="button"
@@ -106,18 +166,49 @@ export default function WorkExperienceForm({
 
 // Interface for the WorkExperienceItem component
 interface WorkExperienceItemProps {
+  id: string;
   form: UseFormReturn<WorkExperienceValues>;
   index: number;
   remove: (index: number) => void;
 }
 
 // WorkExperienceItem component
-function WorkExperienceItem({ form, index, remove }: WorkExperienceItemProps) {
+function WorkExperienceItem({
+  id,
+  form,
+  index,
+  remove,
+}: WorkExperienceItemProps) {
+  // Destructure the values from the useSortable hook
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  // Return the work experience form fields
   return (
-    <div className="space-y-3 rounded-md border-2 bg-background p-3">
+    <div
+      className={cn(
+        "space-y-3 rounded-md border-2 bg-background p-3",
+        isDragging && "relative z-50 cursor-grab shadow-xl",
+      )}
+      ref={setNodeRef} // Set the node reference for the work experience item
+      style={{
+        transform: CSS.Transform.toString(transform), // Transform the work experience item
+        transition, // Transition the work experience item
+      }}
+    >
       <div className="flex justify-between gap-2">
         <span className="font-semibold">Work Experience {index + 1}</span>
-        <GripHorizontal className="size-5 cursor-grab text-muted-foreground" />
+        <GripHorizontal
+          className="size-5 cursor-grab text-muted-foreground outline-none"
+          {...attributes} // Add the attributes for the sortable context
+          {...listeners} // Add the listeners for the sortable context
+        />
       </div>
       <FormField
         control={form.control}

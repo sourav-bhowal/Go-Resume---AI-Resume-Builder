@@ -7,6 +7,8 @@ import BreadCrumbs from "../editor/parts/BreadCrumbs";
 import { useState } from "react";
 import { ResumeValues } from "@/helpers/validation";
 import ResumePreviewSection from "./parts/ResumePreviewSection";
+import { FileUserIcon, PenLineIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // New Resume Editor Component
 export default function NewResumeEditor() {
@@ -18,6 +20,9 @@ export default function NewResumeEditor() {
 
   // Get current step
   const currentStep = searchParams.get("step") || steps[0].key;
+
+  // State to show resume preview in small screens
+  const [showSmResumePreview, setShowSmResumePreview] = useState(false);
 
   // Set the current step in the URL along with the search params
   function setStep(key: string) {
@@ -46,7 +51,12 @@ export default function NewResumeEditor() {
       <main className="relative grow">
         <div className="absolute bottom-0 top-0 flex w-full">
           {/* LEFT PANEL */}
-          <div className="w-full space-y-5 overflow-y-auto p-3 md:w-1/2">
+          <div
+            className={cn(
+              "w-full space-y-5 overflow-y-auto p-3 md:block md:w-1/2",
+              showSmResumePreview && "hidden",
+            )}
+          >
             <BreadCrumbs currentStep={currentStep} setCurrentStep={setStep} />
             {CurrentFormComponent && (
               <CurrentFormComponent
@@ -60,6 +70,7 @@ export default function NewResumeEditor() {
           <ResumePreviewSection
             resumeData={resumeData}
             setResumeData={setResumeData}
+            className={cn(showSmResumePreview && "flex")}
           />
         </div>
       </main>
@@ -104,6 +115,18 @@ export default function NewResumeEditor() {
             </Button>
           </div>
           <div className="flex items-center gap-3">
+            {/* Button to show or hide resume preview in small screens */}
+            <Button
+              variant={"outline"}
+              size={"icon"}
+              onClick={() => setShowSmResumePreview(!showSmResumePreview)}
+              className="md:hidden"
+              title={
+                showSmResumePreview ? "Show Resume Form" : "Show Resume Preview"
+              }
+            >
+              {showSmResumePreview ? <PenLineIcon /> : <FileUserIcon />}
+            </Button>
             <Button variant={"secondary"} asChild>
               <Link href="/my-resumes">Close</Link>
             </Button>

@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { personalInfoSchema, PersonalInfoValues } from "@/helpers/validation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { ResumeEditorFormProps } from "@/helpers/types";
+import { Button } from "@/components/ui/button";
+import { Trash } from "lucide-react";
 
 // PersonalInfoForm component
 export default function PersonalInfoForm({
@@ -49,6 +51,9 @@ export default function PersonalInfoForm({
     return unsubscribe;
   }, [form, resumeData, setResumeData]);
 
+  // Reference to the photo input field for uploading or deleting the profile photo
+  const photoInputRef = useRef<HTMLInputElement>(null);
+
   // Render the form
   return (
     <div className="mx-auto max-w-xl space-x-6">
@@ -66,17 +71,35 @@ export default function PersonalInfoForm({
             render={({ field: { value, ...fieldValues } }) => (
               <FormItem>
                 <FormLabel>Profile Photo</FormLabel>
-                <FormControl>
-                  <Input
-                    {...fieldValues}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]; // Get the first file from the input field
-                      fieldValues.onChange(file); // Update the field value
+                <div className="flex items-center gap-2">
+                  <FormControl>
+                    <Input
+                      {...fieldValues}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]; // Get the first file from the input field
+                        fieldValues.onChange(file); // Update the field value
+                      }}
+                      ref={photoInputRef} // Reference to the photo input field
+                    />
+                  </FormControl>
+                  <Button // Button to remove the profile photo
+                    variant="destructive"
+                    type="button"
+                    title="Remove photo"
+                    onClick={() => {
+                      fieldValues.onChange(null); // Remove the photo by setting the field value to null
+                      if (photoInputRef.current) {
+                        // Check if the photo input field exists
+                        photoInputRef.current.value = ""; // Clear the input field value to allow re-uploading the photo
+                      }
                     }}
-                  />
-                </FormControl>
+                  >
+                    <Trash size={16} />
+                    Remove
+                  </Button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
