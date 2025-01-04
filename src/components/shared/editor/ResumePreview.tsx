@@ -81,13 +81,15 @@ function MyResumePersonalInfo({ resumeData }: MyResumeProps) {
     // Set the photo source to the object URL
     if (objectUrl) {
       setPhotoSrc(objectUrl);
+    } else if (photo === null) {
       // If the photo is null, set the photo source to an empty string
-      if (photo === null) {
-        setPhotoSrc("");
-      }
-      // Clean up fn to Revoke the object URL when the component is unmounted or the photo changes to prevent memory leaks
-      return () => URL.revokeObjectURL(objectUrl);
+      setPhotoSrc("");
     }
+
+    // Clean up function to revoke the object URL when the component is unmounted or the photo changes to prevent memory leaks
+    return () => {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
   }, [photo]);
 
   // Render the My Resume Personal Info component
