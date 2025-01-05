@@ -12,6 +12,7 @@ import { summarySchema, SummaryValues } from "@/helpers/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import GenerateSummaryBtn from "./GenerateSummaryBtn";
 
 // Summary form is a placeholder for the summary step in the editor
 export default function SummaryForm({
@@ -68,6 +69,12 @@ export default function SummaryForm({
                   />
                 </FormControl>
                 <FormMessage />
+                <GenerateSummaryBtn
+                  resumeData={resumeData}
+                  onAISummaryGenerated={(
+                    summary, // onSummaryGenerated function that sets the AI generated summary value in the form state
+                  ) => form.setValue("summary", summary)}
+                />
               </FormItem>
             )}
           />

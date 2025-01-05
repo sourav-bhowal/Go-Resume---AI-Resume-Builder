@@ -11,14 +11,25 @@ import { FileUserIcon, Loader2, PenLineIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import useUnloadWarning from "@/hooks/use-unloadWarning";
 import useAutoSave from "./autoSave";
+import { ResumeDataSelect } from "@/helpers/types";
+import mapToResumeValues from "@/helpers/mapToResumeValues";
+
+// New Resume Editor Props
+interface NewResumeEditorProps {
+  resumeToEdit: ResumeDataSelect | null; // Resume to edit data
+}
 
 // New Resume Editor Component
-export default function NewResumeEditor() {
+export default function NewResumeEditor({
+  resumeToEdit,
+}: NewResumeEditorProps) {
   // Get the search params
   const searchParams = useSearchParams();
 
   // State for Resume Data
-  const [resumeData, setResumeData] = useState<ResumeValues>({});
+  const [resumeData, setResumeData] = useState<ResumeValues>(
+    resumeToEdit ? mapToResumeValues(resumeToEdit) : {}, // If resumeToEdit is provided, map it to ResumeValues else empty object
+  );
 
   // State to show resume preview in small screens
   const [showSmResumePreview, setShowSmResumePreview] = useState(false);

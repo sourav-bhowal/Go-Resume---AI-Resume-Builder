@@ -108,3 +108,14 @@ export type ResumeValues = Omit<z.infer<typeof resumeSchema>, "photo"> & {
   id?: string;
   photo?: File | string | null;
 };
+
+// Define the schema for the "OPENAI" generate summary object
+export const generateSummarySchema = z.object({
+  jobTitle: optionalString,
+  ...workExperienceSchema.shape,
+  ...educationSchema.shape,
+  ...skillsSchema.shape,
+});
+
+// Define the type for the OPENAI generate summary object
+export type GenerateSummaryValues = z.infer<typeof generateSummarySchema>;

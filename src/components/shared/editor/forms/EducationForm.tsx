@@ -35,7 +35,7 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 
-//
+// EducationForm component
 export default function EducationForm({
   resumeData,
   setResumeData,
