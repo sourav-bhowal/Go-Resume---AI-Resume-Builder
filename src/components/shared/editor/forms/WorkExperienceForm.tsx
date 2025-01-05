@@ -11,10 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  workExperienceSchema,
-  WorkExperienceValues,
-} from "@/helpers/validation";
+import { workExperienceSchema, WorkExperienceValues } from "@/lib/validation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { GripHorizontal, Plus, Trash } from "lucide-react";
@@ -38,6 +35,7 @@ import {
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
+// import GenerateWorkExperienceBtn from "./GenerateWorkExpBtn";
 
 // Work Experience Form Component
 export default function WorkExperienceForm({
@@ -210,6 +208,14 @@ function WorkExperienceItem({
           {...listeners} // Add the listeners for the sortable context
         />
       </div>
+      {/* Generate work experience button */}
+      {/* <div className="flex justify-center">
+        <GenerateWorkExperienceBtn
+          onWorkExperienceGenerated={(workExperience) => {  // Call the onWorkExperienceGenerated function with the generated work experience value and set the form value for the work experience item at the index 
+            form.setValue(`workExperiences.${index}`, workExperience);
+          }}
+        />
+      </div> */}
       <FormField
         control={form.control}
         name={`workExperiences.${index}.position`}

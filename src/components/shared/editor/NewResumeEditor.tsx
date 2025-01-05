@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { steps } from "./steps";
 import BreadCrumbs from "../editor/parts/BreadCrumbs";
 import { useState } from "react";
-import { ResumeValues } from "@/helpers/validation";
+import { ResumeValues } from "@/lib/validation";
 import ResumePreviewSection from "./parts/ResumePreviewSection";
 import { FileUserIcon, Loader2, PenLineIcon } from "lucide-react";
 import { cn } from "@/lib/utils";

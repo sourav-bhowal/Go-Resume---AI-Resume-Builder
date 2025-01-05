@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { personalInfoSchema, PersonalInfoValues } from "@/helpers/validation";
+import { personalInfoSchema, PersonalInfoValues } from "@/lib/validation";
 import { useEffect, useRef } from "react";
 import { ResumeEditorFormProps } from "@/helpers/types";
 import { Button } from "@/components/ui/button";

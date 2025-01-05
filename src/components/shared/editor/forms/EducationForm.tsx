@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { educationSchema, EducationValues } from "@/helpers/validation";
+import { educationSchema, EducationValues } from "@/lib/validation";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { GripHorizontal, Plus, Trash } from "lucide-react";

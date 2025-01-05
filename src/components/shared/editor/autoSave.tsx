@@ -1,4 +1,4 @@
-import { ResumeValues } from "@/helpers/validation";
+import { ResumeValues } from "@/lib/validation";
 import useDebounce from "@/hooks/use-debounce";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "next/navigation";

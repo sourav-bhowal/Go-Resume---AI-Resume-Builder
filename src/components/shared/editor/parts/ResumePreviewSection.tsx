@@ -1,4 +1,4 @@
-import { ResumeValues } from "@/helpers/validation";
+import { ResumeValues } from "@/lib/validation";
 import ResumePreview from "../ResumePreview";
 import ColorPicker from "./ColorPicker";
 import BorderStyleSwitch from "./BorderStyleSwitch";

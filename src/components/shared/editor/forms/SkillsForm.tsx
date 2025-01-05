@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { ResumeEditorFormProps } from "@/helpers/types";
-import { skillsSchema, SkillsValues } from "@/helpers/validation";
+import { skillsSchema, SkillsValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";

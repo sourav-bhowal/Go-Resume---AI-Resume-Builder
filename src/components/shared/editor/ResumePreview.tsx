@@ -1,4 +1,4 @@
-import { ResumeValues } from "@/helpers/validation";
+import { ResumeValues } from "@/lib/validation";
 import useDimensions from "@/hooks/use-dimensions";
 import { cn } from "@/lib/utils";
 import Image from "next/image";

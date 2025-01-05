@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { ResumeValues } from "./validation";
+import { ResumeValues } from "../lib/validation";
 
 // Resume Editor Form Props
 export interface ResumeEditorFormProps {

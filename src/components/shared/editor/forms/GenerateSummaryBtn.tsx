@@ -1,4 +1,4 @@
-import { ResumeValues } from "@/helpers/validation";
+import { ResumeValues } from "@/lib/validation";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import LoadingBtn from "../../LoadingBtn";
@@ -59,7 +59,7 @@ export default function GenerateSummaryBtn({
       loading={loading}
     >
       <WandSparklesIcon size={24} />
-      Generate Summary
+      Generate Summary (AI)
     </LoadingBtn>
   );
 }

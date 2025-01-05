@@ -57,6 +57,11 @@ export const workExperienceSchema = z.object({
 // Define the type for the work experience object
 export type WorkExperienceValues = z.infer<typeof workExperienceSchema>;
 
+// Define the type for a single work experience 
+export type WorkExperienceValue = NonNullable<
+  z.infer<typeof workExperienceSchema>["workExperiences"]
+>[number];
+
 // Define the schema for the education object which is an array of objects
 export const educationSchema = z.object({
   educations: z
@@ -108,6 +113,20 @@ export type ResumeValues = Omit<z.infer<typeof resumeSchema>, "photo"> & {
   id?: string;
   photo?: File | string | null;
 };
+
+// Define the schema for the "OPENAI" generate work experience object
+export const generateWorkExperienceDescriptionSchema = z.object({
+  description: z
+    .string()
+    .trim()
+    .min(1)
+    .min(20, "Must be at least 20 characters"),
+});
+
+// Type for the "OPENAI or GEMINI" generate work experience object
+export type GenerateWorkExperienceDescriptionValues = z.infer<
+  typeof generateWorkExperienceDescriptionSchema
+>;
 
 // Define the schema for the "OPENAI" generate summary object
 export const generateSummarySchema = z.object({
