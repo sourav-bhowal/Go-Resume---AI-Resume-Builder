@@ -3,7 +3,7 @@ import useDebounce from "@/hooks/use-debounce";
 import { useToast } from "@/hooks/use-toast";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { saveResume } from "./actions";
+import { saveResumeServerAction } from "./actions";
 import { Button } from "@/components/ui/button";
 import fileReplacer from "@/helpers/fileReplacer";
 
@@ -48,7 +48,7 @@ export default function useAutoSave(resumeData: ResumeValues) {
         const newResumeData = structuredClone(debouncedResumeData);
 
         // Save the updated resume data to the server using the saveResume server function
-        const updatedResumeData = await saveResume({
+        const updatedResumeData = await saveResumeServerAction({
           id: resumeId,
           ...newResumeData,
           // If the photo is the same as the last saved photo, set the photo to undefined by checking the JSON.stringify of the last saved photo and the new photo using the fileReplacer function

@@ -13,7 +13,7 @@ export const resumeDataInclude = {
   educations: true,
 } satisfies Prisma.ResumeInclude;
 
-// Type for Resume Data Select which includes Work Experiences and Educations
-export type ResumeDataSelect = Prisma.ResumeGetPayload<{
+// Type for Resume Data Select which includes Work Experiences and Educations i.e Resume Data Select Server
+export type ResumeDataSelectServer = Prisma.ResumeGetPayload<{
   include: typeof resumeDataInclude;
 }>;

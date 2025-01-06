@@ -4,8 +4,8 @@ import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 
-// New Resume Page Props Type
-interface NewResumePageProps {
+// Resume Page Props Type
+interface ResumeEditorPageProps {
   searchParams: Promise<{ resumeId: string }>; // Search Params
 }
 
@@ -15,10 +15,10 @@ export const metadata: Metadata = {
   description: "New Resume Page",
 };
 
-// New Resume Page
-export default async function NewResumePage({
+// Resume Editor Page
+export default async function ResumeEditorPage({
   searchParams,
-}: NewResumePageProps) {
+}: ResumeEditorPageProps) {
   // Get Resume ID from Search Params
   const { resumeId } = await searchParams;
 

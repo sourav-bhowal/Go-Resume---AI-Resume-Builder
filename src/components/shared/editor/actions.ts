@@ -4,9 +4,10 @@ import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { del, put } from "@vercel/blob";
 import path from "path";
+import { revalidatePath } from "next/cache";
 
 // Save Resume function to save the resume data to the server
-export async function saveResume(values: ResumeValues) {
+export async function saveResumeServerAction(values: ResumeValues) {
   // Extract the resume id from the values
   const { id } = values;
 
@@ -62,7 +63,7 @@ export async function saveResume(values: ResumeValues) {
 
   // If the resume already exists, update it
   if (id) {
-    return prisma.resume.update({
+    const updatedResume = prisma.resume.update({
       where: { id },
       data: {
         ...resumeValues,
@@ -96,10 +97,16 @@ export async function saveResume(values: ResumeValues) {
         updatedAt: new Date(), // Update the updated at date
       },
     });
+
+    // Revalidate the cache
+    revalidatePath("/my-resumes");
+
+    // Return the updated resume
+    return updatedResume;
   }
   // If the resume does not exist, create a new one
   else {
-    return prisma.resume.create({
+    const newResume = prisma.resume.create({
       data: {
         ...resumeValues,
         userId,
@@ -128,5 +135,11 @@ export async function saveResume(values: ResumeValues) {
         },
       },
     });
+
+    // Revalidate the cache
+    revalidatePath("/my-resumes");
+
+    // Return the new resume
+    return newResume;
   }
 }
