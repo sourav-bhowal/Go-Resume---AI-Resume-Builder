@@ -10,11 +10,13 @@ import { borderStyles } from "./parts/BorderStyleSwitch";
 interface ResumePreviewProps {
   resumeData: ResumeValues;
   className?: string;
+  resumeRef?: React.Ref<HTMLDivElement>;
 }
 
 // Resume Preview Component
 export default function ResumePreview({
   resumeData,
+  resumeRef,
   className,
 }: ResumePreviewProps) {
   // Reference to the container element
@@ -37,6 +39,8 @@ export default function ResumePreview({
         style={{
           zoom: (1 / 794) * width, // Adjust the zoom level based on the width of the container element
         }}
+        ref={resumeRef} // Assign the resumeRef to the div element to allow printing
+        id="resumePreviewContent" // Add an ID to the div element
       >
         <MyResumePersonalInfo resumeData={resumeData} />
         <MyResumeSummary resumeData={resumeData} />
@@ -161,7 +165,7 @@ function MyResumeSummary({ resumeData }: MyResumeProps) {
       />
       <div className="break-inside-avoid space-y-3">
         <h3 className="text-lg font-bold">Summary</h3>
-        <p className="whitespace-pre-line text-sm">{summary}</p>
+        <p className="whitespace-pre-line text-sm break-words">{summary}</p>
       </div>
     </div>
   );
@@ -215,7 +219,7 @@ function MyResumeWorkExperience({ resumeData }: MyResumeProps) {
                 </span>
               )}
             </p>
-            <p className="whitespace-pre-line text-sm">{work.description}</p>
+            <p className="whitespace-pre-line text-sm break-words">{work.description}</p>
           </div>
         ))}
       </div>

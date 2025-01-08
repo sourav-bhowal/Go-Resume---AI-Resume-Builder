@@ -14,7 +14,7 @@ model Resume {
   id              String           @id @default(cuid())
   userId          String
   colorHex        String           @default("#000000")
-  borderStyle    String           @default("squircle")
+  borderStyle     String           @default("squircle")
   title           String?
   description     String?
   photoUrl        String?
@@ -68,4 +68,19 @@ model Education {
   resume      Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   @@map("educations")
+}
+
+// user Subscription model
+model UserSubscription {
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  stripeCustomerId        String   @unique
+  stripeSubscriptionId    String   @unique
+  stripePriceId           String
+  stripeCurrentPeriodEnd  DateTime
+  stripeCancelAtPeriodEnd Boolean  @default(false)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@map("user_subscriptions")
 }

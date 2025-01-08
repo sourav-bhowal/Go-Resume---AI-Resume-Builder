@@ -1,11 +1,9 @@
 import SingleResumeItem from "@/components/shared/resume/SingleResumeItem";
-import { Button } from "@/components/ui/button";
 import { resumeDataInclude } from "@/helpers/types";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { Plus } from "lucide-react";
 import { Metadata } from "next";
-import Link from "next/link";
+import CreateResumeBtn from "./CreateResumeBtn";
 
 // Metadata
 export const metadata: Metadata = {
@@ -48,12 +46,8 @@ export default async function MyResumesPage() {
   // Render the My Resumes Page
   return (
     <main className="mx-auto w-full max-w-7xl space-y-6 px-3 py-6">
-      <Button asChild className="mx-auto flex w-fit gap-2">
-        <Link href="/resume-editor">
-          <Plus className="h-6 w-6" />
-          Create New Resume
-        </Link>
-      </Button>
+      {/* Create Resume Button Component */}
+      <CreateResumeBtn canCreateNewResume={countMyResumes < 3} />
       <div className="space-y-1">
         <h1 className="text-2xl font-bold">My Resumes</h1>
         <p className="text-muted-foreground">
@@ -62,7 +56,7 @@ export default async function MyResumesPage() {
       </div>
       <div className="flex w-full grid-cols-2 flex-col gap-3 sm:grid md:grid-cols-3 lg:grid-cols-4">
         {myResumes.map((resume) => (
-          <SingleResumeItem key={resume.id} resume={resume} />  // Single Resume Item Component
+          <SingleResumeItem key={resume.id} resume={resume} /> // Single Resume Item Component
         ))}
       </div>
     </main>
