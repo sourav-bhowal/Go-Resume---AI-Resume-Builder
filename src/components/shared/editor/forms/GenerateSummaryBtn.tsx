@@ -4,6 +4,9 @@ import { useState } from "react";
 import LoadingBtn from "../../LoadingBtn";
 import { WandSparklesIcon } from "lucide-react";
 import { generateSummary } from "./actions";
+import { useSubscriptionLevel } from "@/context/SubscriptionLevelProvider";
+import usePremiumModal from "@/hooks/use-premiumModal";
+import { canUseAITools } from "@/lib/permissions";
 
 // GenerateSummaryBtnProps
 interface GenerateSummaryBtnProps {
@@ -21,9 +24,19 @@ export default function GenerateSummaryBtn({
   // useState hooks for loading state
   const [loading, setLoading] = useState(false);
 
+  // Get the user's subscription level
+  const subscriptionLevel = useSubscriptionLevel();
+
+  // Custom hook to show premium modal component
+  const premiumModal = usePremiumModal();
+
   // generateSummary function to generate summary
   async function handleClick() {
-    //TODO: subscription
+    // If the user can't use AI tools, show the premium modal
+    if (!canUseAITools(subscriptionLevel)) {
+      premiumModal.onOpenChange(true); // Open the premium modal
+      return; // Return to prevent generating summary
+    }
 
     // try block to handle error
     try {
@@ -57,6 +70,7 @@ export default function GenerateSummaryBtn({
       type="button"
       onClick={handleClick} // onClick event handler
       loading={loading}
+      disabled={!canUseAITools(subscriptionLevel)} // disabled if user can't use AI tools
     >
       <WandSparklesIcon size={24} />
       Generate Summary (AI)

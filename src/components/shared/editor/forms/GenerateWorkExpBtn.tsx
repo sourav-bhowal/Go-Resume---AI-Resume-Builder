@@ -40,7 +40,7 @@ export default function GenerateWorkExperienceBtn({
   // Define the state for the input dialog
   const [showInputDialog, setShowInputDialog] = useState(false);
 
-  //   Return the button component
+  // Return the button component
   return (
     <>
       <Button

@@ -1,4 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { useSubscriptionLevel } from "@/context/SubscriptionLevelProvider";
+import usePremiumModal from "@/hooks/use-premiumModal";
+import { canUseCustomizationTools } from "@/lib/permissions";
 import { Circle, Square, Squircle } from "lucide-react";
 
 // Border styles for the BorderStyleSwitch component
@@ -21,8 +24,20 @@ export default function BorderStyleSwitch({
   borderStyle,
   setBorderStyle,
 }: BorderStyleSwitchProps) {
-  // function to set the border style when the user changes the border style
+  // Get the user's subscription level
+  const subscriptionLevel = useSubscriptionLevel();
+
+  // Custom hook to show premium modal component
+  const premiumModal = usePremiumModal();
+
+  // Function to set the border style when the user changes the border style
   function handleBorderStyleChange() {
+    // If the user can't use customization tools, show the premium modal
+    if (!canUseCustomizationTools(subscriptionLevel)) {
+      premiumModal.onOpenChange(true); // Open the premium modal
+      return; // Return to prevent changing the border style
+    }
+
     // Get the current border style index from the borderStyleIcons array if the border style is present else set it to 0
     const currentIndex = borderStyle
       ? borderStyleIcons.indexOf(borderStyle)
@@ -50,11 +65,11 @@ export default function BorderStyleSwitch({
       onClick={handleBorderStyleChange}
     >
       {Icon === "Squircle" ? (
-        <Squircle size={24} />  // Squircle icon
+        <Squircle size={24} /> // Squircle icon
       ) : Icon === "Rounded" ? (
-        <Circle size={24} />  // Circle icon
+        <Circle size={24} /> // Circle icon
       ) : (
-        <Square size={24} />  // Square icon
+        <Square size={24} /> // Square icon
       )}
     </Button>
   );

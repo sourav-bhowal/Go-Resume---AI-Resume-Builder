@@ -1,5 +1,7 @@
 "use server";
 import { model } from "@/lib/geminiAI";
+import { canUseAITools } from "@/lib/permissions";
+import { getUserSubscriptionLevel } from "@/lib/subscriptions";
 import {
   generateSummarySchema,
   GenerateSummaryValues,
@@ -7,10 +9,25 @@ import {
   GenerateWorkExperienceDescriptionValues,
   WorkExperienceValue,
 } from "@/lib/validation";
+import { auth } from "@clerk/nextjs/server";
 
 // Generate Summary function to generate the summary of the resume
 export async function generateSummary(input: GenerateSummaryValues) {
-  // TODO:
+  // Get user id from clerk
+  const { userId } = await auth();
+
+  // If the user is not authenticated, throw an error
+  if (!userId) {
+    throw new Error("User is not authenticated");
+  }
+
+  // Get the subscription level of the user
+  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+
+  // Check if the user can use AI tools based on the subscription level
+  if (!canUseAITools(subscriptionLevel)) {
+    throw new Error("User cannot use AI tools");
+  }
 
   // Validate the input data before generating the summary
   const { jobTitle, workExperiences, educations, skills } =

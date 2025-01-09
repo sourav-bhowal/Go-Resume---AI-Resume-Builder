@@ -4,6 +4,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useSubscriptionLevel } from "@/context/SubscriptionLevelProvider";
+import usePremiumModal from "@/hooks/use-premiumModal";
+import { canUseCustomizationTools } from "@/lib/permissions";
 import { Palette } from "lucide-react";
 import { useState } from "react";
 import { Color, ColorChangeHandler, TwitterPicker } from "react-color";
@@ -16,6 +19,12 @@ interface ColorPickerProps {
 
 // Color picker component
 export default function ColorPicker({ color, onChange }: ColorPickerProps) {
+  // Get the user's subscription level
+  const subscriptionLevel = useSubscriptionLevel();
+
+  // Custom hook to show premium modal component
+  const premiumModal = usePremiumModal();
+
   // State for showing popover
   const [showPopOver, setShowPopOver] = useState(false);
 
@@ -28,7 +37,15 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
           variant={"outline"}
           size={"icon"}
           title="Change resume color"
-          onClick={() => setShowPopOver(true)}
+          onClick={() => {
+            // If the user can't use customization tools, show the premium modal
+            if (!canUseCustomizationTools(subscriptionLevel)) {
+              premiumModal.onOpenChange(true); // Open the premium modal
+              return; // Return to prevent showing the color picker popover
+            }
+            // Show the color picker popover if the user can use customization tools
+            setShowPopOver(true);
+          }}
         >
           <Palette size={24} />
         </Button>

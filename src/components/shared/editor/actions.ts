@@ -5,13 +5,13 @@ import { auth } from "@clerk/nextjs/server";
 import { del, put } from "@vercel/blob";
 import path from "path";
 import { revalidatePath } from "next/cache";
+import { getUserSubscriptionLevel } from "@/lib/subscriptions";
+import { canCreateResume, canUseCustomizationTools } from "@/lib/permissions";
 
 // Save Resume function to save the resume data to the server
 export async function saveResumeServerAction(values: ResumeValues) {
   // Extract the resume id from the values
   const { id } = values;
-
-  console.log("Saving resume", values);
 
   // Validate the resume data before saving it
   const { photo, workExperiences, educations, ...resumeValues } =
@@ -25,6 +25,20 @@ export async function saveResumeServerAction(values: ResumeValues) {
     throw new Error("Unauthorized. Please log in to save your resume.");
   }
 
+  // Get the user's subscription level
+  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+
+  // If the resume id is not provided, check if the user can create a new resume
+  if (!id) {
+    // Get the user's resume count
+    const userResumeCount = await prisma.resume.count({ where: { userId } });
+
+    // If the user can't create a new resume, throw an error
+    if (!canCreateResume(subscriptionLevel, userResumeCount)) {
+      throw new Error("Maximum resume count reached.");
+    }
+  }
+
   // Check if the resume already exists in the database
   const existingResume = id
     ? await prisma.resume.findUnique({ where: { id, userId } })
@@ -33,6 +47,20 @@ export async function saveResumeServerAction(values: ResumeValues) {
   // If no resume is found throw an error
   if (id && !existingResume) {
     throw new Error("Resume not found");
+  }
+
+  // Check if the resume has customizations i.e if the border style or color has changed from the existing resume
+  const hasCustomizations =
+    (resumeValues.borderStyle &&
+      resumeValues.borderStyle !== existingResume?.borderStyle) ||
+    (resumeValues.colorHex &&
+      resumeValues.colorHex !== existingResume?.colorHex);
+
+  // If the resume has customizations and the user can't use customization tools, throw an error
+  if (hasCustomizations && !canUseCustomizationTools(subscriptionLevel)) {
+    throw new Error(
+      "Customization tools are only available for premium plus users.",
+    );
   }
 
   // New photo url to store the photo
