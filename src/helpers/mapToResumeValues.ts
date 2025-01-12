@@ -1,9 +1,9 @@
-import { ResumeDataSelect } from "./types";
+import { ResumeDataSelectServer } from "./types";
 import { ResumeValues } from "../lib/validation";
 
 // Map Resume Data to Resume Values for validation so that the server generated resume data can be validated against the schema
 export default function mapToResumeValues(
-  data: ResumeDataSelect,
+  data: ResumeDataSelectServer,
 ): ResumeValues {
   return {
     id: data.id,
