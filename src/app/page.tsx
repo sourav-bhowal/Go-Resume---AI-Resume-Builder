@@ -10,13 +10,16 @@ import { auth } from "@clerk/nextjs/server";
 export default async function Home() {
   const { userId } = await auth();
 
-  const userSubscriptionLevel = await getUserSubscriptionLevel(userId!);
   return (
     <main>
       <Hero />
       <Features />
       <Working />
-      <PricingSection userSubscriptionLevel={userSubscriptionLevel} />
+      <PricingSection
+        userSubscriptionLevel={
+          userId ? await getUserSubscriptionLevel(userId) : "free"
+        }
+      />
       <FAQ />
       <Footer />
     </main>
