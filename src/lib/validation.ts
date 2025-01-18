@@ -62,6 +62,39 @@ export type WorkExperienceValue = NonNullable<
   z.infer<typeof workExperienceSchema>["workExperiences"]
 >[number];
 
+// Define the schema for the certificate object which is an array of objects
+export const certificateSchema = z.object({
+  certificates: z
+    .array(
+      z.object({
+        title: optionalString,
+        authority: optionalString,
+        issueDate: optionalString,
+      }),
+    )
+    .optional(),
+});
+
+// Define the type for the certificate object
+export type CertificateValues = z.infer<typeof certificateSchema>;
+
+// Project schema
+export const projectSchema = z.object({
+  projects: z
+    .array(
+      z.object({
+        title: optionalString,
+        description: optionalString,
+        startDate: optionalString,
+        endDate: optionalString,
+      }),
+    )
+    .optional(),
+});
+
+// Define the type for the project object
+export type ProjectValues = z.infer<typeof projectSchema>;
+
 // Define the schema for the education object which is an array of objects
 export const educationSchema = z.object({
   educations: z
@@ -104,6 +137,8 @@ export const resumeSchema = z.object({
   ...educationSchema.shape,
   ...skillsSchema.shape,
   ...summarySchema.shape,
+  ...certificateSchema.shape,
+  ...projectSchema.shape,
   colorHex: optionalString,
   borderStyle: optionalString,
 });

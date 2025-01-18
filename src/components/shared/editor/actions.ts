@@ -14,7 +14,7 @@ export async function saveResumeServerAction(values: ResumeValues) {
   const { id } = values;
 
   // Validate the resume data before saving it
-  const { photo, workExperiences, educations, ...resumeValues } =
+  const { photo, workExperiences, educations, projects, certificates, ...resumeValues } =
     resumeSchema.parse(values);
 
   // Get the logged in user
@@ -122,6 +122,22 @@ export async function saveResumeServerAction(values: ResumeValues) {
               : undefined,
           })),
         },
+        projects: {
+          deleteMany: {}, // Delete all existing projects
+          create: projects?.map((project) => ({
+            ...project,
+            startDate: project.startDate ? new Date(project.startDate) : undefined,
+            endDate: project.endDate ? new Date(project.endDate) : undefined,
+          })),
+        },
+        certificates: {
+          deleteMany: {}, // Delete all existing certificates
+          create: certificates?.map((certificate) => ({
+            ...certificate,
+          })),
+        },
+
+
         updatedAt: new Date(), // Update the updated at date
       },
     });
@@ -159,6 +175,18 @@ export async function saveResumeServerAction(values: ResumeValues) {
             endDate: education.endDate
               ? new Date(education.endDate)
               : undefined,
+          })),
+        },
+        projects: {
+          create: projects?.map((project) => ({
+            ...project,
+            startDate: project.startDate ? new Date(project.startDate) : undefined,
+            endDate: project.endDate ? new Date(project.endDate) : undefined,
+          })),
+        },
+        certificates: {
+          create: certificates?.map((certificate) => ({
+            ...certificate,
           })),
         },
       },

@@ -11,6 +11,8 @@ export interface ResumeEditorFormProps {
 export const resumeDataInclude = {
   workExperiences: true,
   educations: true,
+  certificates: true,
+  projects: true,
 } satisfies Prisma.ResumeInclude;
 
 // Type for Resume Data Select which includes Work Experiences and Educations i.e Resume Data Select Server

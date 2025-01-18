@@ -73,7 +73,7 @@ export default function NewResumeEditor({
           {/* LEFT PANEL */}
           <div
             className={cn(
-              "w-full space-y-5 overflow-y-auto p-3 md:block md:w-1/2",
+              "w-full space-y-5 overflow-y-auto py-3 px-8 md:block md:w-1/2",
               showSmResumePreview && "hidden",
             )}
           >

@@ -33,6 +33,7 @@ model Resume {
   workExperiences WorkExperience[]
   educations      Education[]
   certificates    Certificate[]
+  projects        Project[]
   skills          String[]
 
   @@map("resumes")
@@ -72,14 +73,26 @@ model Education {
   @@map("educations")
 }
 
+model Project {
+  id          String   @id @default(cuid())
+  title       String?
+  description String?
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  resumeId    String
+  resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("projects")
+}
+
 // Certificate model
 model Certificate {
   id          String   @id @default(cuid())
   title       String?
   authority   String?
-  license     String?
-  startDate   DateTime?
-  endDate     DateTime?
+  issueDate   DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   resumeId    String

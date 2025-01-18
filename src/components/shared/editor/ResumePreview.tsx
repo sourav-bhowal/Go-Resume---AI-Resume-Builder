@@ -45,6 +45,7 @@ export default function ResumePreview({
         <MyResumePersonalInfo resumeData={resumeData} />
         <MyResumeSummary resumeData={resumeData} />
         <MyResumeWorkExperience resumeData={resumeData} />
+        <MyResumeProjects resumeData={resumeData} />
         <MyResumeEducation resumeData={resumeData} />
         <MyResumeSkills resumeData={resumeData} />
       </div>
@@ -165,7 +166,7 @@ function MyResumeSummary({ resumeData }: MyResumeProps) {
       />
       <div className="break-inside-avoid space-y-3">
         <h3 className="text-lg font-bold">Summary</h3>
-        <p className="whitespace-pre-line text-sm break-words">{summary}</p>
+        <p className="whitespace-pre-line break-words text-sm">{summary}</p>
       </div>
     </div>
   );
@@ -219,7 +220,58 @@ function MyResumeWorkExperience({ resumeData }: MyResumeProps) {
                 </span>
               )}
             </p>
-            <p className="whitespace-pre-line text-sm break-words">{work.description}</p>
+            <p className="whitespace-pre-line break-words text-sm">
+              {work.description}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// My Resume Projects Component
+function MyResumeProjects({ resumeData }: MyResumeProps) {
+  const { projects, colorHex } = resumeData;
+  if (!projects?.length) return null;
+
+  return (
+    <div>
+      <hr
+        className="border-2"
+        style={{
+          borderColor: colorHex,
+        }}
+      />
+      <div className="break-inside-avoid space-y-3">
+        <h3 className="text-lg font-bold">Projects</h3>
+        {projects.map((project, index) => (
+          <div key={index} className="space-y-1">
+            <h4
+              className="text-base font-bold"
+              style={{
+                color: colorHex,
+              }}
+            >
+              {project.title}
+            </h4>
+            <p className="flex items-center justify-between text-sm font-semibold">
+              {project.startDate && (
+                <span
+                  style={{
+                    color: colorHex,
+                  }}
+                >
+                  {formatDate(project.startDate, "MMM yyyy")}
+                  {project.endDate
+                    ? ` - ${formatDate(project.endDate, "MMM yyyy")}`
+                    : "  - Present"}
+                </span>
+              )}
+            </p>
+            <p className="whitespace-pre-line break-words text-sm">
+              {project.description}
+            </p>
           </div>
         ))}
       </div>

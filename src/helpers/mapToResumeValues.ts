@@ -34,6 +34,18 @@ export default function mapToResumeValues(
       endDate: education.endDate?.toISOString().split("T")[0] || undefined, // Convert date to string and remove time from it
       description: education.description || undefined,
     })),
+    certificates: data.certificates.map((certificate) => ({
+      title: certificate.title || undefined,
+      authority: certificate.authority || undefined,
+      startDate: certificate.startDate?.toISOString().split("T")[0] || undefined, // Convert date to string and remove time from it
+      endDate: certificate.endDate?.toISOString().split("T")[0] || undefined, // Convert date to string and remove time from it
+    })),
+    projects: data.projects.map((project) => ({
+      title: project.title || undefined,
+      description: project.description || undefined,
+      startDate: project.startDate?.toISOString().split("T")[0] || undefined, // Convert date to string and remove time from it
+      endDate: project.endDate?.toISOString().split("T")[0] || undefined, // Convert date to string and remove time from it
+    })),
     skills: data.skills,
     borderStyle: data.borderStyle,
     colorHex: data.colorHex,
