@@ -1,53 +1,62 @@
 "use client";
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import React from "react";
-import logo from "@/assets/logo.png";
-import { UserButton } from "@clerk/nextjs";
-import { CreditCard } from "lucide-react";
-import ThemeToggler from "./ThemeToogler";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
+import { CreditCard } from "lucide-react";
+import ThemeToggler from "./ThemeToogler";
 
-// Navbar component
-export default function Navbar() {
+// NavBar component
+export default function NavBar() {
+  // Get the user object from the useUser hook Clerk provides
+  const { user, isLoaded } = useUser();
   const { theme } = useTheme();
+
+  // Return the NavBar component
   return (
-    <nav className="shadow-sm">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 p-3">
-        <Link href={"/my-resumes"} className="flex items-center gap-2">
-          <Image
-            src={logo}
-            width={40}
-            height={40}
-            alt="logo"
-            className="rounded-full"
-          />
-          <span className="text-xl font-bold tracking-tight text-pink-700">
-            Go Resume
-          </span>
-        </Link>
-        <div className="flex items-center justify-center gap-4">
-          <ThemeToggler />
-          <UserButton
-            appearance={{
-              elements: {
-                avatarBox: {
-                  width: 40,
-                  height: 40,
-                },
-              },
-              baseTheme: theme === "dark" ? dark : undefined,
-            }}
-          >
-            <UserButton.MenuItems>
-              <UserButton.Link
-                href="/subscription"
-                label="Subscriptions"
-                labelIcon={<CreditCard />}
-              />
-            </UserButton.MenuItems>
-          </UserButton>
+    <nav className="sticky top-0 z-50 bg-white dark:bg-black/80">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <Link href="/" className="md:text-2xl text-xl font-bold from-purple-600 to-pink-600">
+              Go Resume
+            </Link>
+          </div>
+
+          {/* CTA Button For large screens*/}
+          <div className="flex items-center gap-5">
+            <ThemeToggler />
+            {isLoaded &&
+              (user ? (
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: {
+                        width: 40,
+                        height: 40,
+                      },
+                    },
+                    baseTheme: theme === "dark" ? dark : undefined,
+                  }}
+                >
+                  <UserButton.MenuItems>
+                    <UserButton.Link
+                      href="/subscription"
+                      label="Subscriptions"
+                      labelIcon={<CreditCard />}
+                    />
+                  </UserButton.MenuItems>
+                </UserButton>
+              ) : (
+                <Link href="/my-resumes">
+                  <Button className="bg-pink-600 text-white transition-colors duration-200 hover:bg-pink-700">
+                    Get Started
+                  </Button>
+                </Link>
+              ))}
+          </div>
         </div>
       </div>
     </nav>

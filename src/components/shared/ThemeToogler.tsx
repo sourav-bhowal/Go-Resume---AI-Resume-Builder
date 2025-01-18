@@ -1,9 +1,7 @@
 "use client";
-
 import * as React from "react";
-import { Computer, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -38,15 +36,6 @@ export default function ThemeToggler() {
           <Moon className="mr-2 h-[1.2rem] w-[1.2rem]" />
           Dark
           {theme === "dark" && (
-            <span className="absolute right-0 top-0 -mr-2 -mt-2 rounded-full bg-pink-500 p-1.5 text-xs text-white">
-              Active
-            </span>
-          )}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          <Computer className="mr-2 h-[1.2rem] w-[1.2rem]" />
-          System
-          {theme === "system" && (
             <span className="absolute right-0 top-0 -mr-2 -mt-2 rounded-full bg-pink-500 p-1.5 text-xs text-white">
               Active
             </span>

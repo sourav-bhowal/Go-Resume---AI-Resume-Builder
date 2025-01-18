@@ -32,9 +32,11 @@ model Resume {
   updatedAt       DateTime         @updatedAt
   workExperiences WorkExperience[]
   educations      Education[]
+  certificates    Certificate[]
   skills          String[]
 
   @@map("resumes")
+  
 }
 
 // Work experience model
@@ -68,6 +70,22 @@ model Education {
   resume      Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   @@map("educations")
+}
+
+// Certificate model
+model Certificate {
+  id          String   @id @default(cuid())
+  title       String?
+  authority   String?
+  license     String?
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  resumeId    String
+  resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("certificates")
 }
 
 // user Subscription model

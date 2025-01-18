@@ -4,6 +4,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
+import Navbar from "@/components/shared/Navbar";
+import { dark } from "@clerk/themes";
 
 // Inter font from Google Fonts
 const inter = Inter({ subsets: ["latin"] });
@@ -26,8 +28,12 @@ export default function RootLayout({
 }>) {
   return (
     // ClerkProvider for authentication and user management
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
+      <html lang="en" suppressHydrationWarning className="scroll-smooth">
         <body className={inter.className}>
           <ThemeProvider
             attribute={"class"}
@@ -35,6 +41,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Navbar />
             {children}
             <Toaster /> {/* Toaster for notifications */}
           </ThemeProvider>

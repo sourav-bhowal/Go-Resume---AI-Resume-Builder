@@ -4,10 +4,12 @@ import usePremiumModal from "@/hooks/use-premiumModal";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
+// CreateResumeBtn.tsx
 interface CreateResumeBtnProps {
   canCreateNewResume: boolean;
 }
 
+// Create the CreateResumeBtn component
 export default function CreateResumeBtn({
   canCreateNewResume,
 }: CreateResumeBtnProps) {

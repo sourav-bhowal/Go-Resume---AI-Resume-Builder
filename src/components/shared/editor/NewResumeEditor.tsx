@@ -11,12 +11,12 @@ import { FileUserIcon, Loader2, PenLineIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import useUnloadWarning from "@/hooks/use-unloadWarning";
 import useAutoSave from "./autoSave";
-import { ResumeDataSelect } from "@/helpers/types";
+import { ResumeDataSelectServer } from "@/helpers/types";
 import mapToResumeValues from "@/helpers/mapToResumeValues";
 
 // New Resume Editor Props
 interface NewResumeEditorProps {
-  resumeToEdit: ResumeDataSelect | null; // Resume to edit data
+  resumeToEdit: ResumeDataSelectServer | null; // Resume to edit data
 }
 
 // New Resume Editor Component
