@@ -46,7 +46,7 @@ export default function Hero() {
               <Link href="#features">
                 <Button
                   variant={"ghost"}
-                  className="rounded-full border border-gray-700 px-8 py-6 font-medium text-black transition-colors duration-200 hover:bg-gray-800 hover:text-gray-300 dark:text-gray-300"
+                  className="rounded-full w-full border border-gray-700 px-8 py-6 font-medium text-black transition-colors duration-200 hover:bg-gray-800 hover:text-gray-300 dark:text-gray-300"
                 >
                   Learn More
                 </Button>

@@ -20,7 +20,7 @@ export default function NavBar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="md:text-2xl text-xl font-bold from-purple-600 to-pink-600">
+            <Link href="/" className="md:text-2xl text-xl font-bold text-purple-500">
               Go Resume
             </Link>
           </div>
