@@ -4,7 +4,7 @@ import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
-import { CreditCard } from "lucide-react";
+import { CreditCard, PenIcon } from "lucide-react";
 import ThemeToggler from "./ThemeToogler";
 
 // NavBar component
@@ -20,7 +20,10 @@ export default function NavBar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="md:text-2xl text-xl font-bold text-purple-500">
+            <Link
+              href="/"
+              className="text-xl font-bold text-purple-500 md:text-2xl"
+            >
               Go Resume
             </Link>
           </div>
@@ -41,6 +44,13 @@ export default function NavBar() {
                     baseTheme: theme === "dark" ? dark : undefined,
                   }}
                 >
+                  <UserButton.MenuItems>
+                    <UserButton.Link
+                      href="/my-resumes"
+                      label="My Resumes"
+                      labelIcon={<PenIcon />}
+                    />
+                  </UserButton.MenuItems>
                   <UserButton.MenuItems>
                     <UserButton.Link
                       href="/subscription"
